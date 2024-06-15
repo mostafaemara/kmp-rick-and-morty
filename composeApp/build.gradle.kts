@@ -52,6 +52,7 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kamel)
+            implementation(libs.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -109,4 +110,9 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+compose.resources{
+    publicResClass=true;
+
+    generateResClass=always;
 }

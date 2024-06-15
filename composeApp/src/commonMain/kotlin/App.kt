@@ -1,21 +1,12 @@
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import dev.icerock.moko.mvvm.compose.getViewModel
 import dev.icerock.moko.mvvm.compose.viewModelFactory
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import kmp_rick_and_morty.composeapp.generated.resources.Res
-import kmp_rick_and_morty.composeapp.generated.resources.compose_multiplatform
 import theme.*
 
 
@@ -53,6 +44,6 @@ val charactersViewModel = getViewModel(Unit, viewModelFactory {
 LaunchedEffect( charactersViewModel){
     charactersViewModel.getCharacters()
 }
-        CharactersPage(uiState )
+       HomePage()
     }
 }

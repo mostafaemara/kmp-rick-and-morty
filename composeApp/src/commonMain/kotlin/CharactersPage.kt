@@ -1,26 +1,38 @@
-
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import dev.icerock.moko.mvvm.compose.getViewModel
+import dev.icerock.moko.mvvm.compose.viewModelFactory
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import model.Character
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.filled.*
+
 @Composable
-fun CharactersPage(uiState: CharactersUIState) {
+fun CharactersPage() {
 
+    val charactersViewModel = getViewModel(Unit, viewModelFactory {
+        CharactersViewModel(
+            RickAndMortyApi()
+        )
+    })
+    val uiState by charactersViewModel.uiState.collectAsState()
 
+    LaunchedEffect( charactersViewModel){
+        charactersViewModel.getCharacters()
+    }
     Scaffold(
-        topBar ={ TopAppBar(title= { Text("Rick And Morty")})},
+
         content = {padding->   LazyColumn {
         items(uiState.characters.size) {
             index -> CharacterListItem(character = uiState.characters[index])
@@ -31,30 +43,7 @@ fun CharactersPage(uiState: CharactersUIState) {
 
         },
 
-        bottomBar = {
-          BottomNavigation(
 
-            ) {
-                BottomNavigationItem(
-                    icon = { Icon(Icons.Filled.Person,"") },
-                    selected = true,
-                    onClick = {} ,
-                    label = {Text("Characters")}
-                )
-                BottomNavigationItem(
-                    icon = { Icon(Icons.Filled.LocationOn,"") },
-                    selected = true,
-                    onClick = {} ,
-                    label = {Text("Locationa")}
-                    )
-                BottomNavigationItem(
-                    icon = { Icon(Icons.Filled.PlayArrow,"") },
-                    selected = true,
-                    onClick = {} ,
-                    label = {Text("Episode")}
-                    )
-            }
-        }
 
     )
 }
