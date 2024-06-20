@@ -4,9 +4,11 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kmp_rick_and_morty.composeapp.generated.resources.Res
 import kmp_rick_and_morty.composeapp.generated.resources.characters
@@ -24,12 +26,15 @@ fun HomePage() {
     val navController = rememberNavController()
     Scaffold(      topBar ={ TopAppBar(title= { Text("Rick And Morty")})},
         bottomBar = {
+
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
             BottomNavigation(
     
                 ) {
                     BottomNavigationItem(
                         icon = { Icon(Icons.Filled.Person,"") },
-                        selected = navController.currentDestination?.route == HomeScreenRoutes.characters.name,
+                        selected =  HomeScreenRoutes.characters.name==currentRoute,
                         onClick = {
                             navController.navigate(
                                 route = HomeScreenRoutes.characters.name
@@ -40,7 +45,7 @@ fun HomePage() {
                     BottomNavigationItem(
                         icon = { Icon(Icons.Filled.LocationOn,"") },
                     
-                        selected = navController.currentDestination?.route == HomeScreenRoutes.location.name ,
+                        selected =  HomeScreenRoutes.location.name ==   currentRoute ,
                         onClick = {
                             navController.navigate(
                                 route = HomeScreenRoutes.location.name
@@ -50,7 +55,7 @@ fun HomePage() {
                         )
                     BottomNavigationItem(
                         icon = { Icon(Icons.Filled.PlayArrow,"") },
-                        selected = navController.currentDestination?.route == HomeScreenRoutes.episode.name ,
+                        selected =  HomeScreenRoutes.episode.name==currentRoute ,
                         onClick = {
                             navController.navigate(
                                 route = HomeScreenRoutes.episode.name
@@ -81,7 +86,7 @@ fun HomePage() {
             composable(
                 route = HomeScreenRoutes.location.name
             ) {
-                Text("Locations")
+                LocationScreen()
             }
         }
 

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RickAndMortyResponse<T>(
     val info: Info,
-    val results: List<T> // List of generic type T
+    val results: T // List of generic type T
 )
 
 @Serializable
