@@ -18,11 +18,9 @@ class RickAndMortyApi {
         }
     }
     
-    suspend  fun getCharacter(page:Int=1): RickAndMortyResponse<List<Character>> {
-        return httpClient.get("$baseUrl/character"){
-            url {
-                parameters.append("page",page.toString())
-            }
+    suspend  fun getCharacter(nextPage:String? =null): RickAndMortyResponse<List<Character>> {
+        return httpClient.get(nextPage?:"$baseUrl/character"){
+
         }.body()
     }
 

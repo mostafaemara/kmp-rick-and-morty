@@ -16,6 +16,7 @@ import kmp_rick_and_morty.composeapp.generated.resources.episodes
 import kmp_rick_and_morty.composeapp.generated.resources.locations
 
 import org.jetbrains.compose.resources.StringResource
+import screens.EpisodesScreen
 
 enum class HomeScreenRoutes(val title: StringResource) {
     characters(title = Res.string.characters), episode(title = Res.string.episodes), location(title = Res.string.locations)
@@ -81,7 +82,7 @@ fun HomePage() {
             composable(
                 route = HomeScreenRoutes.episode.name
             ) {
-                Text("Episodes")
+                EpisodesScreen()
             }
             composable(
                 route = HomeScreenRoutes.location.name
