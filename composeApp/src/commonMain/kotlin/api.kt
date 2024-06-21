@@ -36,7 +36,7 @@ class RickAndMortyApi {
 
     suspend fun  getEpisodes (page:Int=1):RickAndMortyResponse<List<Episode>>
     {
-        return httpClient.get("$baseUrl/Episode"){
+        return httpClient.get("$baseUrl/episode"){
             url {
                 parameters.append("page",page.toString())
             }
