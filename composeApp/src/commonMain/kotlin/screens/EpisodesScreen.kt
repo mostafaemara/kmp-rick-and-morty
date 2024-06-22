@@ -4,7 +4,7 @@ import RickAndMortyApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -63,13 +63,13 @@ fun EpisodesScreen(){
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EpisodeListItem (episode: Episode){
     ListItem(
-        text = { Text(episode.episode) },
-        trailing = {Text(episode.airDate)},
-        secondaryText = {
+        headlineContent = { Text(episode.episode) },
+        trailingContent = {Text(episode.airDate)},
+        supportingContent = {
             Text(episode.name)
         },
 

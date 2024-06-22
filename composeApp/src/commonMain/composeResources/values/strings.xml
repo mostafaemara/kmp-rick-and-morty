@@ -3,4 +3,5 @@
     <string name="characters">CHaracters</string>
     <string name="episodes">Episodes</string>
     <string name="locations">Locations</string>
+    <string name="characterDetails">Character Details</string>
 </resources>

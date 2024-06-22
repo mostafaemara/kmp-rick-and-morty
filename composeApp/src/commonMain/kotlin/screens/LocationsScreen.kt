@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -69,19 +69,18 @@ fun LocationScreen(){
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+
+
 @Composable
 fun LocationListItem (location: Location){
     ListItem(
-        text = { Text(location.name) },
+        headlineContent = { Text(location.name) },
 
-        secondaryText = {
+        supportingContent = {
             location.dimension?.let { Text(it) }
         },
-        trailing = {
-            location.type?.let { Chip(onClick = {}, ){
-                Text(it)
-            } }
+        trailingContent = {
+            location.type?.let { Text(location.type) }
         }
 
     ) 
