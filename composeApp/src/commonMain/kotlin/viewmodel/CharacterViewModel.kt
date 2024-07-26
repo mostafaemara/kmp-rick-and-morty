@@ -4,13 +4,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import model.Character
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import viewmodel.Status
 
 data class CharactersUIState (val characters:List<Character> = emptyList(), val status: Status= Status.LOADING ,val nextStatus: Status=Status.IDLE)
 
 
 
-class CharactersViewModel(val api: RickAndMortyApi):ViewModel(){
+class CharactersViewModel(val api: RickAndMortyApi ):ViewModel(),KoinComponent{
+
     private val _uiState= MutableStateFlow(CharactersUIState())
     val uiState=_uiState.asStateFlow()
 
