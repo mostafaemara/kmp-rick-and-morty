@@ -16,6 +16,7 @@ import kmp_rick_and_morty.composeapp.generated.resources.Res
 import kmp_rick_and_morty.composeapp.generated.resources.episodes
 import model.Episode
 import model.Location
+import org.koin.compose.koinInject
 import viewmodel.EpisodesViewModel
 import viewmodel.Status
 
@@ -31,11 +32,7 @@ object EpisodesTab : Tab {
 
     @Composable
     override fun Content() {
-        val episodesViewModel = getViewModel(Unit, viewModelFactory {
-            EpisodesViewModel(
-                RickAndMortyApi()
-            )
-        })
+        val episodesViewModel = koinInject<EpisodesViewModel>()
         val uiState by episodesViewModel.uiState.collectAsState()
 
         LaunchedEffect(episodesViewModel) {

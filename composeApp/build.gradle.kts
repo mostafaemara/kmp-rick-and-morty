@@ -45,7 +45,7 @@ kotlin {
             implementation(compose.foundation)
 
             implementation(compose.material3)
-            implementation("androidx.compose.material:material:1.6.8")
+
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -55,12 +55,15 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kamel)
-      
+
             implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.bottomSheetNavigator)
             implementation(libs.voyager.tabNavigator)
             implementation(libs.voyager.transitions)
+            implementation(compose.materialIconsExtended)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

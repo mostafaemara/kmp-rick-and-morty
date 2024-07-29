@@ -1,24 +1,11 @@
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
-
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.navigator.tab.TabNavigator
+import di.appModule
 import di.injectDependancies
 import kmp_rick_and_morty.composeapp.generated.resources.*
-import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.KoinApplication
 import org.koin.core.context.*
-
-import org.koin.dsl.koinApplication
-
-import screens.CharacterDetailsScreen
-
-
 import theme.*
 
 
@@ -26,19 +13,27 @@ import theme.*
 
 
 fun App() {
+
+
     commonApp()
 
 
 }
 
 @Composable
+@Preview
 fun commonApp() {
-    AppTheme(content = {
+    KoinApplication(application = {
+        modules(appModule)
+    }) {
+        AppTheme(content = {
 
-        Navigator(HomeScreen)
+            Navigator(HomeScreen)
 
 
-    })
+        })
+    }
+
 }
 
 

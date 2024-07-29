@@ -6,6 +6,7 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import screens.EpisodesTab
 
 
@@ -13,10 +14,11 @@ object HomeScreen : Screen {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
+    @Preview
     override fun Content() {
         TabNavigator(CharactersTab) {
 
-            Scaffold(topBar = { TopAppBar(title = { Text("Rick And Morty") }) },
+            Scaffold(
                 bottomBar = {
 
 
