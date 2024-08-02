@@ -122,7 +122,31 @@ class CharactersViewModel(val api: RickAndMortyApi) : ViewModel(), KoinComponent
             )
         }
     }
+    fun applyFilter() {
 
+        viewModelScope.launch {
+            try {
+                _uiState.update {
+                    it.copy( status = Status.LOADING)
+                }
+                val charactersResponse =
+                    api.getCharacter(name = _uiState.asStateFlow() .value.name, status =  _uiState.asStateFlow() .value.selectedCharacterStatus, gender =  _uiState.asStateFlow() .value.selectedGender);
+
+                _nextPage = charactersResponse.info.next;
+                _uiState.update {
+                    it.copy(characters = charactersResponse.results, status = Status.SUCCESS)
+                }
+
+
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        status = Status.ERROR
+                    )
+                }
+            }
+        }
+    }
     fun restFilter() {
         _uiState.update {
             it.copy(

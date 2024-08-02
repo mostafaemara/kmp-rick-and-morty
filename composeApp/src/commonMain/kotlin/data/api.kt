@@ -4,7 +4,9 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import model.Character
+import model.CharacterStatus
 import model.Episode
+import model.Gender
 import model.Location
 import model.RickAndMortyResponse
 
@@ -18,8 +20,20 @@ class RickAndMortyApi {
         }
     }
     
-    suspend  fun getCharacter(nextPage:String? =null): RickAndMortyResponse<List<Character>> {
+    suspend  fun getCharacter(nextPage:String? =null, gender:Gender?=null,status: CharacterStatus?=null,name:String?=null): RickAndMortyResponse<List<Character>> {
         return httpClient.get(nextPage?:"$baseUrl/character"){
+            url {
+                if(gender!=null){
+                    parameters.append("gender",gender.name)
+                }
+                if(status!=null){
+                    parameters.append("status",status.name)
+                }
+                if(name!=null){
+                parameters.append("name",name)
+            }
+
+            }
 
         }.body()
     }

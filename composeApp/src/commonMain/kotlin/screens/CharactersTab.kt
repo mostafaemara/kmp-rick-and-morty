@@ -116,12 +116,18 @@ object CharactersTab : Tab {
 
                 }
 
-                if (uiState.showBottomSheet) {
-                    ModalBottomSheet(onDismissRequest = {
+                if (uiState.showBottomSheet) { val bottomPadding = WindowInsets.navigationBars.asPaddingValues()
+                    .calculateBottomPadding().value.toInt() + 8
+                    ModalBottomSheet(
+                        modifier = Modifier.padding(bottom = 50.dp),
+
+                        onDismissRequest = {
                         charactersViewModel.hideBottomSheetFilter()
                     }, sheetState = sheetState) {
                         FilterBottomSheet(
-                            onFilterButtonClicked = {},
+                            onFilterButtonClicked = {
+                                charactersViewModel.applyFilter()
+                            },
                             isFilterButtonEnabled = uiState.isFilterButtonEnabled,
                             name = uiState.name,
                             selectedGender = uiState.selectedGender,
@@ -253,9 +259,10 @@ fun FilterBottomSheet(
         }
 
 
-        Button(onClick = onFilterButtonClicked, enabled = isFilterButtonEnabled) {
+        Button(onClick = { onFilterButtonClicked()}, enabled = isFilterButtonEnabled) {
             Text("Apply Filter")
         }
+        Box(modifier = Modifier.padding(bottom = 50.dp))
 
         //TODO Filter by Status alive dead unkown
         //Todo Filter by Species
