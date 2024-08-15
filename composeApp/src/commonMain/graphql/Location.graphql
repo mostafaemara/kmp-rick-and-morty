@@ -1,0 +1,16 @@
+query Location($locationId: ID!)  {
+    location(id: $locationId)     @nonnull {
+        created
+        dimension
+        @nonnull   id
+        @nonnull   name
+        type
+        @nonnull  residents {
+            name
+            image
+            @nonnull      id
+            species
+            status
+        }
+    }
+}

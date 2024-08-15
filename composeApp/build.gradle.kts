@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.apolloPlugin)
 }
 
 kotlin {
@@ -43,7 +44,7 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+
             implementation(compose.material3)
 
             implementation(compose.ui)
@@ -64,6 +65,7 @@ kotlin {
             implementation(libs.voyager.tabNavigator)
             implementation(libs.voyager.transitions)
             implementation(compose.materialIconsExtended)
+            implementation(libs.apollo.runtime)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -130,4 +132,23 @@ compose.resources {
     publicResClass = true;
 
     generateResClass = always;
+}
+apollo {
+
+    service("service") {
+
+        packageName.set("com.rickandmorty.graphql")
+        introspection {
+
+            endpointUrl.set("https://rickandmortyapi.com/graphql")
+
+            schemaFile.set(file("src/commonMain/graphql/schema.graphqls"))
+
+        }
+
+        warnOnDeprecatedUsages.set(true)
+        generateSourcesDuringGradleSync.set(true)
+
+    }
+
 }

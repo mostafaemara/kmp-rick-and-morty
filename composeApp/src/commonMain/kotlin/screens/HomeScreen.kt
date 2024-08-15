@@ -7,14 +7,15 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import screens.EpisodesTab
+import screens.episodes.EpisodesTab
+import screens.characters.CharactersTab
 
 
 object HomeScreen : Screen {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    @Preview
+
     override fun Content() {
         TabNavigator(CharactersTab) {
 
@@ -55,3 +56,4 @@ private fun RowScope.TabNavigationItem(tab: Tab) {
         })
 
 }
+

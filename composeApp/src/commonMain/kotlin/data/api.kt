@@ -11,48 +11,60 @@ import model.Location
 import model.RickAndMortyResponse
 
 class RickAndMortyApi {
-    private val baseUrl="https://rickandmortyapi.com/api"
-    
-    private val httpClient= HttpClient(){
-        install(ContentNegotiation){
+    private val baseUrl = "https://rickandmortyapi.com/api"
+
+    private val httpClient = HttpClient() {
+        install(ContentNegotiation) {
             json()
-            
+
         }
     }
-    
-    suspend  fun getCharacter(nextPage:String? =null, gender:Gender?=null,status: CharacterStatus?=null,name:String?=null): RickAndMortyResponse<List<Character>> {
-        return httpClient.get(nextPage?:"$baseUrl/character"){
+
+    suspend fun getCharacters(
+        nextPage: String? = null,
+        gender: Gender? = null,
+        status: CharacterStatus? = null,
+        name: String? = null
+    ): RickAndMortyResponse<List<Character>> {
+        return httpClient.get(nextPage ?: "$baseUrl/character") {
             url {
-                if(gender!=null){
-                    parameters.append("gender",gender.name)
+                if (gender != null) {
+                    parameters.append("gender", gender.name)
                 }
-                if(status!=null){
-                    parameters.append("status",status.name)
+                if (status != null) {
+                    parameters.append("status", status.name)
                 }
-                if(name!=null){
-                parameters.append("name",name)
-            }
+                if (name != null) {
+                    parameters.append("name", name)
+                }
 
             }
 
         }.body()
     }
 
-
-    suspend fun  getLocations (page:Int=1):RickAndMortyResponse<List<Location>>
-    {
-        return httpClient.get("$baseUrl/location"){
+    suspend fun getCharacter(id: Int): Character {
+        return httpClient.get("$baseUrl/character/$id") {
             url {
-                parameters.append("page",page.toString())
+
+
+            }
+
+        }.body()
+    }
+
+    suspend fun getLocations(page: Int = 1): RickAndMortyResponse<List<Location>> {
+        return httpClient.get("$baseUrl/location") {
+            url {
+                parameters.append("page", page.toString())
             }
         }.body()
     }
 
-    suspend fun  getEpisodes (page:Int=1):RickAndMortyResponse<List<Episode>>
-    {
-        return httpClient.get("$baseUrl/episode"){
+    suspend fun getEpisodes(page: Int = 1): RickAndMortyResponse<List<Episode>> {
+        return httpClient.get("$baseUrl/episode") {
             url {
-                parameters.append("page",page.toString())
+                parameters.append("page", page.toString())
             }
         }.body()
     }

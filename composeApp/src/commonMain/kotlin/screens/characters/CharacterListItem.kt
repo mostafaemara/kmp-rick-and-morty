@@ -14,45 +14,52 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.rickandmorty.graphql.CharactersQuery
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
-import model.Character
 import model.CharacterStatus
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 @Preview
 @Composable
-fun CharacterListItem(character: Character, onClick: () -> Unit) {
+fun CharacterListItem(character: CharactersQuery.Result, onClick: () -> Unit) {
     ListItem(
 
-        headlineContent = { Text(character.name) }, modifier = Modifier.clickable {
+        headlineContent = { character.name?.let { Text(it) } }, modifier = Modifier.clickable {
             onClick()
 
         },
         supportingContent = {
-            Text(character.species)
+            character.species?.let { Text(it) }
         },
 
         trailingContent = {
             AssistChip(
-                label = { Text(character.status.name) },
+                label = { character.status?.let { Text(it) } },
                 onClick = {},
                 colors = when (character.status) {
-                    CharacterStatus.ALIVE -> assistChipColors(
+                    CharacterStatus.ALIVE.name -> assistChipColors(
                         containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                         labelColor = MaterialTheme.colorScheme.onTertiaryContainer
                     )
 
-                    CharacterStatus.DEAD -> assistChipColors(
+                    CharacterStatus.DEAD.name -> assistChipColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
                         labelColor = MaterialTheme.colorScheme.onErrorContainer
                     )
 
-                    CharacterStatus.UNKNOWN -> assistChipColors(
+                    CharacterStatus.UNKNOWN.name -> assistChipColors(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         labelColor = MaterialTheme.colorScheme.onSecondaryContainer
                     )
+
+                    else -> {
+                        assistChipColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            labelColor = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    }
                 }
             )
 
@@ -60,7 +67,7 @@ fun CharacterListItem(character: Character, onClick: () -> Unit) {
         leadingContent = {
 
             KamelImage(
-                resource = asyncPainterResource(character.image),
+                resource = asyncPainterResource(character.image!!),
                 contentDescription = character.image,
                 modifier = Modifier.size(50.dp, 50.dp).clip(RoundedCornerShape(50.dp)).border(
                     2.dp, Color.Gray,

@@ -1,34 +1,43 @@
 package  screens.characters
+
 import CharactersViewModel
-import androidx.compose.foundation.layout.*
+import Status
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FilterList
-import androidx.compose.material3.*
-import androidx.compose.material3.AssistChipDefaults.assistChipColors
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
-import model.Character
-import model.CharacterStatus
-import model.Gender
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
-
-import screens.CharacterDetailsScreen
-import viewmodel.Status
+import screens.characterDetails.CharacterDetailsScreen
 
 
 object CharactersTab : Tab {
@@ -88,8 +97,8 @@ object CharactersTab : Tab {
 
                         LazyColumn(state = listState, modifier = Modifier.padding(padding)) {
                             itemsIndexed(uiState.characters) { index, character ->
-                                CharacterListItem(character = character, onClick = {
-                                    navigator?.push(CharacterDetailsScreen(characterId = character.id))
+                                CharacterListItem(character = character!!, onClick = {
+                                   navigator?.push(CharacterDetailsScreen(characterId = character.id!!))
                                 })
                             }
 
@@ -110,14 +119,16 @@ object CharactersTab : Tab {
 
                 }
 
-                if (uiState.showBottomSheet) { val bottomPadding = WindowInsets.navigationBars.asPaddingValues()
-                    .calculateBottomPadding().value.toInt() + 8
+                if (uiState.showBottomSheet) {
+                    val bottomPadding = WindowInsets.navigationBars.asPaddingValues()
+                        .calculateBottomPadding().value.toInt() + 8
                     ModalBottomSheet(
                         modifier = Modifier.padding(bottom = 50.dp),
 
                         onDismissRequest = {
-                        charactersViewModel.hideBottomSheetFilter()
-                    }, sheetState = sheetState) {
+                            charactersViewModel.hideBottomSheetFilter()
+                        }, sheetState = sheetState
+                    ) {
                         FilterBottomSheet(
                             onFilterButtonClicked = {
                                 charactersViewModel.applyFilter()

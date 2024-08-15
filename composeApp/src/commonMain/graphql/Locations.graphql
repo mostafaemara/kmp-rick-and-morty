@@ -1,0 +1,15 @@
+query Locations($page: Int, $filter: FilterLocation) {
+    locations (page: $page, filter: $filter) @nonnull {
+        info  @nonnull {
+            next
+            pages
+        }
+        results @nonnull {
+            created
+            dimension
+            id @nonnull
+            name @nonnull
+            type
+        }
+    }
+}
