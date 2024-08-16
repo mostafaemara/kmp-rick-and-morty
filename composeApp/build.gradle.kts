@@ -40,6 +40,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
+
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -66,6 +68,8 @@ kotlin {
             implementation(libs.voyager.transitions)
             implementation(compose.materialIconsExtended)
             implementation(libs.apollo.runtime)
+
+
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -115,6 +119,7 @@ android {
 dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.material3.android)
+    implementation(libs.androidx.ui.tooling.preview.android)
 }
 
 compose.desktop {
