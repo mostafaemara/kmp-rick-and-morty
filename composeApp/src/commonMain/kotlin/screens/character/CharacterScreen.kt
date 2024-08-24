@@ -1,6 +1,6 @@
-package screens.characterDetails
+package screens.character
 
-import CharacterDetailsViewModel
+
 import Status
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,16 +36,16 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 
-class CharacterDetailsScreen(private val characterId: String) : Screen {
+class CharacterScreen(private val characterId: String) : Screen {
 
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     @Preview
     override fun Content() {
-        val characterDetailsViewModel: CharacterDetailsViewModel =
-            koinInject<CharacterDetailsViewModel
-                    >()
+        val characterDetailsViewModel: CharacterViewModel =
+            koinInject<CharacterViewModel
+                >()
 
 
         val uiState by characterDetailsViewModel.uiState.collectAsState()
@@ -93,7 +93,7 @@ class CharacterDetailsScreen(private val characterId: String) : Screen {
                             style = MaterialTheme.typography.headlineLarge
                         )
 
-                        CharacterDetailsHeader(uiState.character!!)
+                        CharacterHeader(uiState.character!!)
 
                         Row {
                             Text(
@@ -117,7 +117,8 @@ class CharacterDetailsScreen(private val characterId: String) : Screen {
                         Column() {
 
                             uiState.character?.episode?.take(5)?.forEach {
-                                ListItem(headlineContent = { Text(it?.episode!!) },
+                                ListItem(
+                                    headlineContent = { Text(it?.episode!!) },
                                     supportingContent = {
                                         Text(it?.name!!)
                                     }, trailingContent = {

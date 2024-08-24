@@ -1,3 +1,6 @@
+package screens.character
+
+import Status
 import com.apollographql.apollo.ApolloClient
 import com.rickandmorty.graphql.CharacterQuery
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
@@ -7,19 +10,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-data class CharacterDetailsState(
+data class CharacterState(
     val character: CharacterQuery.Character? = null,
     val characterStatus: Status = Status.IDLE
-);
-class CharacterDetailsViewModel(val graphQlClient: ApolloClient) : ViewModel() {
+)
 
-    private val _uiState = MutableStateFlow<CharacterDetailsState>(CharacterDetailsState())
+class CharacterViewModel(private val graphQlClient: ApolloClient) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(CharacterState())
     val uiState = _uiState.asStateFlow()
 
-
-    override fun onCleared() {
-        super.onCleared()
-    }
 
     fun getCharacterDetails(id: String) {
         viewModelScope.launch {

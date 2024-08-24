@@ -1,4 +1,4 @@
-package screens.characterDetails
+package screens.character
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,7 +28,7 @@ import io.kamel.image.asyncPainterResource
 
 
 @Composable
-fun CharacterDetailsHeader(character: CharacterQuery.Character) {
+fun CharacterHeader(character: CharacterQuery.Character) {
     Column {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             KamelImage(

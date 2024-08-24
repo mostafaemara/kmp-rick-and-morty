@@ -1,6 +1,6 @@
 package di
 
-import CharacterDetailsViewModel
+
 import CharactersViewModel
 import EpisodesViewModel
 import RickAndMortyApi
@@ -9,6 +9,8 @@ import com.apollographql.apollo.ApolloClient
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import screens.character.CharacterViewModel
+import screens.episode.EpisodeViewModel
 import screens.locationDetails.LocationDetailsViewModel
 import screens.locations.LocationsViewModel
 
@@ -18,8 +20,9 @@ val appModule: Module = module {
     factory { CharactersViewModel(get()) }
     factory { LocationsViewModel(get()) }
     factory { EpisodesViewModel(get()) }
-    factory { CharacterDetailsViewModel(get()) }
+    factory { CharacterViewModel(get()) }
     factory { LocationDetailsViewModel(get()) }
+    factory { EpisodeViewModel(get()) }
 }
 
 

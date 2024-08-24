@@ -37,7 +37,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
-import screens.characterDetails.CharacterDetailsScreen
+import screens.character.CharacterScreen
 
 
 object CharactersTab : Tab {
@@ -98,7 +98,7 @@ object CharactersTab : Tab {
                         LazyColumn(state = listState, modifier = Modifier.padding(padding)) {
                             itemsIndexed(uiState.characters) { index, character ->
                                 CharacterListItem(character = character!!, onClick = {
-                                   navigator?.push(CharacterDetailsScreen(characterId = character.id!!))
+                                    navigator?.push(CharacterScreen(characterId = character.id!!))
                                 })
                             }
 

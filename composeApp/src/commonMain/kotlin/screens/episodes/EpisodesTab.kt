@@ -11,9 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import org.koin.compose.koinInject
+import screens.episode.EpisodeScreen
 
 
 object EpisodesTab : Tab {
@@ -29,7 +32,7 @@ object EpisodesTab : Tab {
     override fun Content() {
         val episodesViewModel = koinInject<EpisodesViewModel>()
         val uiState by episodesViewModel.uiState.collectAsState()
-
+        val navigator = LocalNavigator.currentOrThrow
         LaunchedEffect(episodesViewModel) {
             episodesViewModel.getEpisodes()
         }
@@ -40,7 +43,10 @@ object EpisodesTab : Tab {
 
                     SUCCESS -> LazyColumn {
                         items(uiState.episodes.size) { index ->
-                            EpisodeListItem(episode = uiState.episodes[index])
+                            EpisodeListItem(episode = uiState.episodes[index], onClick = {
+                                navigator.parent?.push(EpisodeScreen(episodeId = uiState.episodes[index].id.toString()))
+
+                            })
                         }
                     }
 

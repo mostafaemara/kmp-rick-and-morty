@@ -1,4 +1,4 @@
-package screens.characterDetails
+package screens.character
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
