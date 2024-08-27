@@ -1,6 +1,7 @@
 package screens.locationDetails
 
 
+import CharacterListItem
 import Status
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -28,6 +29,7 @@ import io.kamel.image.asyncPainterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import org.koin.compose.koinInject
+import screens.character.CharacterScreen
 
 class LocationDetailsScreen(private val locationId: String) : Screen {
 
@@ -105,31 +107,17 @@ private fun ScreenContent(uiState: LocationDetailsUIState) {
                                                 index ->
 
                                             val resident = residents?.get(index);
-                                            ListItem(
-                                                leadingContent = {
-
-                                                    KamelImage(
-
-                                                        resource = asyncPainterResource(resident?.image!!),
-                                                        contentDescription = "",
-                                                        modifier = Modifier.size(height = 50.dp, width = 50.dp).clip(
-                                                            RoundedCornerShape(50.dp)
-                                                        ).border(2.dp, color = Color.Gray)
-                                                    )
-
-
+                                            CharacterListItem(
+                                                name = resident?.name ?: "",
+                                                image = resident?.image ?: "",
+                                                onClick = {
+                                                    navigator.push(CharacterScreen(resident?.id ?: ""))
                                                 },
-                                                headlineContent = {
-                                                    Text(resident?.name ?: "")
-                                                },
-                                                trailingContent = {
-                                                    Icon(
-                                                        Icons.AutoMirrored.Outlined.ArrowForwardIos,
-                                                        contentDescription = "Ccharacter Details"
-                                                    )
-                                                }
+                                                species = resident?.species ?: "",
+                                                status = resident?.status ?: "",
 
-                                            )
+
+                                                )
 
                                         }
                                     }

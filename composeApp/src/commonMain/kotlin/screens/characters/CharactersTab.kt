@@ -1,5 +1,6 @@
 package  screens.characters
 
+import CharacterListItem
 import CharactersViewModel
 import Status
 import androidx.compose.foundation.layout.Box
@@ -97,9 +98,14 @@ object CharactersTab : Tab {
 
                         LazyColumn(state = listState, modifier = Modifier.padding(padding)) {
                             itemsIndexed(uiState.characters) { index, character ->
-                                CharacterListItem(character = character!!, onClick = {
-                                    navigator?.push(CharacterScreen(characterId = character.id!!))
-                                })
+                                CharacterListItem(
+                                    name = character?.name ?: "",
+                                    image = character?.image ?: "",
+                                    species = character?.species ?: "",
+                                    status = character?.status ?: "",
+                                    onClick = {
+                                        navigator?.push(CharacterScreen(characterId = character!!.id!!))
+                                    })
                             }
 
 

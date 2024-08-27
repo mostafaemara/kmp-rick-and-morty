@@ -1,7 +1,9 @@
 package screens.episode
 
 
+import CharacterListItem
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.outlined.DateRange
@@ -18,6 +20,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import org.koin.compose.koinInject
+import screens.character.CharacterScreen
 
 class EpisodeScreen(private val episodeId: String) : Screen {
 
@@ -94,15 +97,30 @@ class EpisodeScreen(private val episodeId: String) : Screen {
 
                             )
                         }
-                    }
+                        Text("Characters", style = MaterialTheme.typography.labelLarge)
+                        LazyColumn {
+                            items(uiState.episode!!.characters!!.size) { index ->
+                                val character = uiState.episode!!.characters!![index]
+                                CharacterListItem(
+                                    name = character?.name ?: "",
+                                    image = character?.image ?: "",
+                                    species = character?.species ?: "",
+                                    status = character?.status ?: "",
+                                    onClick = {
+                                        navigator.push(CharacterScreen(characterId = character!!.id!!))
+                                    })
 
+                            }
+                        }
+
+                    }
                 }
+
             }
+
 
         }
 
 
     }
-
-
 }
