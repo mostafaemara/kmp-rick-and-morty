@@ -1,14 +1,11 @@
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -37,8 +34,17 @@ object LocationsTab : Tab {
         val locationsViewModel = koinInject<LocationsViewModel>()
         val uiState by locationsViewModel.uiState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow.parent;
+        val lazyListState = rememberLazyListState()
         LaunchedEffect(locationsViewModel) {
             locationsViewModel.getLocations()
+            snapshotFlow {
+                lazyListState.firstVisibleItemIndex + lazyListState.layoutInfo.visibleItemsInfo.size
+            }.collect { lastVisibleIndex ->
+                if (lastVisibleIndex >= uiState.locations.size) {
+                    locationsViewModel.getNextLocations()
+
+                }
+            }
         }
 
         Scaffold(
@@ -46,7 +52,7 @@ object LocationsTab : Tab {
             content = { padding ->
                 when (uiState.status) {
 
-                    Status.SUCCESS -> LazyColumn {
+                    Status.SUCCESS -> LazyColumn(state = lazyListState) {
                         items(uiState.locations.size) { index ->
                             LocationListItem(location = uiState.locations[index], onClick = {
 

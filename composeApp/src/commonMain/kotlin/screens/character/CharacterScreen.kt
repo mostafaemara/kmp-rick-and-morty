@@ -34,6 +34,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
+import screens.common.EpisodeListItem
+import screens.episode.EpisodeScreen
 
 
 class CharacterScreen(private val characterId: String) : Screen {
@@ -116,15 +118,16 @@ class CharacterScreen(private val characterId: String) : Screen {
 
                         Column() {
 
-                            uiState.character?.episode?.take(5)?.forEach {
-                                ListItem(
-                                    headlineContent = { Text(it?.episode!!) },
-                                    supportingContent = {
-                                        Text(it?.name!!)
-                                    }, trailingContent = {
-                                        Text(it?.air_date!!)
+                            uiState.character?.episode?.forEach {
+                                EpisodeListItem(
+                                    episode = it?.episode ?: "",
+                                    airDate = it?.air_date ?: "",
+                                    name = it?.name ?: "",
+                                    onClick = {
+                                        navigator.push(EpisodeScreen(episodeId = it?.id ?: ""))
                                     }
-                                )
+
+                                    )
                             }
 
                         }

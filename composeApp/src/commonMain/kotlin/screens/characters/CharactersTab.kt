@@ -3,13 +3,12 @@ package  screens.characters
 import CharacterListItem
 import CharactersViewModel
 import Status
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -62,7 +61,7 @@ object CharactersTab : Tab {
             >()
 
         val uiState by charactersViewModel.uiState.collectAsState()
-        val listState = rememberLazyListState()
+        val gridState = rememberLazyGridState()
         val navigator = LocalNavigator.currentOrThrow.parent;
 
         val sheetState = rememberModalBottomSheetState()
@@ -70,8 +69,8 @@ object CharactersTab : Tab {
         LaunchedEffect(charactersViewModel) {
             charactersViewModel.getCharacters()
         }
-        LaunchedEffect(listState) {
-            snapshotFlow { listState.firstVisibleItemIndex + listState.layoutInfo.visibleItemsInfo.size }.collect { visibleItemsCount ->
+        LaunchedEffect(gridState) {
+            snapshotFlow { gridState.firstVisibleItemIndex + gridState.layoutInfo.visibleItemsInfo.size }.collect { visibleItemsCount ->
                 if (visibleItemsCount >= uiState.characters.size) {
                     charactersViewModel.getNextCharacters();
                 }
@@ -96,13 +95,18 @@ object CharactersTab : Tab {
                 when (uiState.status) {
                     Status.SUCCESS ->
 
-                        LazyColumn(state = listState, modifier = Modifier.padding(padding)) {
-                            itemsIndexed(uiState.characters) { index, character ->
-                                CharacterListItem(
+                        LazyVerticalGrid(
+                            columns = GridCells.Adaptive(minSize = 160.dp),
+
+                            state = gridState, modifier = Modifier.padding(padding).padding(horizontal = 12.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(uiState.characters) { character ->
+                                CharacterGridItem(
                                     name = character?.name ?: "",
-                                    image = character?.image ?: "",
-                                    species = character?.species ?: "",
-                                    status = character?.status ?: "",
+                                    imageUrl = character?.image ?: "",
+
                                     onClick = {
                                         navigator?.push(CharacterScreen(characterId = character!!.id!!))
                                     })
