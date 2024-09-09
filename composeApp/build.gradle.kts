@@ -134,9 +134,9 @@ compose.desktop {
     }
 }
 compose.resources {
-    publicResClass = true;
+    publicResClass = true
 
-    generateResClass = always;
+    generateResClass = always
 }
 apollo {
 

@@ -1,41 +1,33 @@
 package  screens.characters
 
-import CharacterListItem
 import CharactersViewModel
 import Status
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FilterList
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import kmp_rick_and_morty.composeapp.generated.resources.Res
+import kmp_rick_and_morty.composeapp.generated.resources.logo
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import screens.character.CharacterScreen
 
@@ -54,7 +46,7 @@ object CharactersTab : Tab {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    @Preview
+
     override fun Content() {
 
         val charactersViewModel: CharactersViewModel = koinInject<CharactersViewModel
@@ -62,6 +54,7 @@ object CharactersTab : Tab {
 
         val uiState by charactersViewModel.uiState.collectAsState()
         val gridState = rememberLazyGridState()
+        val filterListState = rememberLazyListState()
         val navigator = LocalNavigator.currentOrThrow.parent;
 
         val sheetState = rememberModalBottomSheetState()
@@ -79,13 +72,44 @@ object CharactersTab : Tab {
 
         Scaffold(
             topBar = {
-                TopAppBar(title = { Text("Characters") }, actions = {
-                    IconButton(onClick = {
-                        charactersViewModel.showBottomSheetFilter()
-                    }, content = {
-                        Icon(Icons.Outlined.FilterList, contentDescription = "")
-                    })
-                })
+                Column {
+                    TopAppBar(
+
+
+                        title = {
+
+                            Image(
+
+                                painter = painterResource(
+                                    Res.drawable.logo
+                                ),
+                                contentDescription = "logo",
+                                alignment = Alignment.Center,
+                                modifier = Modifier.fillMaxWidth()
+
+                            )
+                        },
+                    )
+                    TextField(
+                        "Search Characters",
+
+                        onValueChange = {},
+                        trailingIcon = { Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search") },
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp, start = 12.dp, end = 12.dp).clip(
+                            shape = RoundedCornerShape(
+                                size = 50.dp
+                            )
+                        ),
+                        colors = TextFieldDefaults.colors(
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+
+                            )
+
+                    )
+
+                }
+
             },
 
 
@@ -94,25 +118,104 @@ object CharactersTab : Tab {
 
                 when (uiState.status) {
                     Status.SUCCESS ->
+                        Column(modifier = Modifier.padding(padding)) {
+                            LazyRow(
 
-                        LazyVerticalGrid(
-                            columns = GridCells.Adaptive(minSize = 160.dp),
+                                state = filterListState,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.padding(horizontal = 12.dp)
 
-                            state = gridState, modifier = Modifier.padding(padding).padding(horizontal = 12.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(uiState.characters) { character ->
-                                CharacterGridItem(
-                                    name = character?.name ?: "",
-                                    imageUrl = character?.image ?: "",
 
-                                    onClick = {
-                                        navigator?.push(CharacterScreen(characterId = character!!.id!!))
-                                    })
+                            ) {
+
+                                item() {
+                                    FilterChip(
+
+                                        enabled = true,
+                                        selected = false,
+                                        label = { Text("Dead") },
+                                        onClick = {},
+
+
+                                        )
+                                }
+                                item() {
+                                    FilterChip(
+
+                                        enabled = true,
+                                        selected = true,
+                                        label = { Text("Alive") },
+                                        onClick = {},
+                                        leadingIcon = {
+                                            Icon(Icons.Default.Done, contentDescription = "")
+                                        }
+
+                                    )
+                                }
+                                item() {
+                                    FilterChip(
+
+                                        enabled = true,
+                                        selected = false,
+                                        label = { Text("Unkown") },
+                                        onClick = {},
+
+
+                                        )
+                                }
+                                item() {
+                                    FilterChip(
+
+                                        enabled = true,
+                                        selected = false,
+                                        label = { Text("Male") },
+                                        onClick = {},
+
+
+                                        )
+                                }
+                                item() {
+                                    FilterChip(
+
+                                        enabled = true,
+                                        selected = false,
+                                        label = { Text("Female") },
+                                        onClick = {},
+
+
+                                        )
+                                }
+                                item() {
+                                    FilterChip(
+
+                                        enabled = true,
+                                        selected = false,
+                                        label = { Text("Genderless") },
+                                        onClick = {},
+
+
+                                        )
+                                }
                             }
+                            LazyVerticalGrid(
+                                columns = GridCells.Adaptive(minSize = 400.dp),
 
 
+                                state = gridState, modifier = Modifier.padding(horizontal = 12.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                items(uiState.characters) { character ->
+                                    CharacterGridItem(
+                                        character = character!!,
+
+                                        onClick = {
+                                            navigator?.push(CharacterScreen(characterId = character!!.id!!))
+                                        })
+                                }
+
+
+                            }
                         }
 
                     Status.IDLE, Status.LOADING -> Box(

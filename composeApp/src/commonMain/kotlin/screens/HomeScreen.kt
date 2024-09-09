@@ -50,9 +50,13 @@ private fun RowScope.TabNavigationItem(tab: Tab) {
 
     NavigationBarItem(
         selected = tabNavigator.current == tab,
-        onClick = { tabNavigator.current = tab }, label = {},
+        onClick = { tabNavigator.current = tab },
+        alwaysShowLabel = true,
         icon = {
-            Text(tab.options.title)
+            Icon(tab.options.icon!!, contentDescription = null)
+        },
+        label = {
+            Text(text = tab.options.title)
         })
 
 }
