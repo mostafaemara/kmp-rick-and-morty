@@ -1,8 +1,11 @@
 package  screens.characters
 
+import CharacterStatus
 import CharactersViewModel
+import Gender
 import Status
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -12,7 +15,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -38,8 +42,9 @@ object CharactersTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
+            val icon = rememberVectorPainter(Icons.Filled.AccountCircle);
             return remember {
-                TabOptions(index = 0u, title = "Characters", icon = null)
+                TabOptions(index = 0u, title = "Characters", icon = icon)
             }
         }
 
@@ -71,44 +76,32 @@ object CharactersTab : Tab {
         }
 
         Scaffold(
+
+
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+
             topBar = {
-                Column {
-                    TopAppBar(
+
+                TopAppBar(
 
 
-                        title = {
+                    title = {
 
-                            Image(
+                        Image(
 
-                                painter = painterResource(
-                                    Res.drawable.logo
-                                ),
-                                contentDescription = "logo",
-                                alignment = Alignment.Center,
-                                modifier = Modifier.fillMaxWidth()
+                            painter = painterResource(
+                                Res.drawable.logo
+                            ),
+                            contentDescription = "logo",
+                            alignment = Alignment.Center,
+                            modifier = Modifier.fillMaxWidth().height(40.dp)
 
-                            )
-                        },
-                    )
-                    TextField(
-                        "Search Characters",
+                        )
 
-                        onValueChange = {},
-                        trailingIcon = { Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search") },
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp, start = 12.dp, end = 12.dp).clip(
-                            shape = RoundedCornerShape(
-                                size = 50.dp
-                            )
-                        ),
-                        colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
 
-                            )
+                    },
+                )
 
-                    )
-
-                }
 
             },
 
@@ -118,7 +111,41 @@ object CharactersTab : Tab {
 
                 when (uiState.status) {
                     Status.SUCCESS ->
-                        Column(modifier = Modifier.padding(padding)) {
+                        Column(
+                            modifier = Modifier.padding(padding)
+                        ) {
+                            Box(
+                                modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+                            ) {
+                                TextField(
+                                    uiState.name,
+
+                                    onValueChange = {
+                                        charactersViewModel.updateSearchName(it)
+                                    },
+
+                                    trailingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Search,
+                                            contentDescription = "Search"
+                                        )
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                        .padding(bottom = 12.dp, start = 12.dp, end = 12.dp)
+
+                                        .clip(
+                                            shape = RoundedCornerShape(
+                                                size = 50.dp
+                                            )
+                                        ),
+                                    colors = TextFieldDefaults.colors(
+                                        focusedIndicatorColor = Color.Transparent,
+                                        unfocusedIndicatorColor = Color.Transparent,
+
+                                        )
+
+                                )
+                            }
                             LazyRow(
 
                                 state = filterListState,
@@ -132,9 +159,13 @@ object CharactersTab : Tab {
                                     FilterChip(
 
                                         enabled = true,
-                                        selected = false,
+                                        selected = uiState.selectedCharacterStatus == CharacterStatus.DEAD,
                                         label = { Text("Dead") },
-                                        onClick = {},
+                                        onClick = {
+                                            charactersViewModel.selectStatusFilter(
+                                                CharacterStatus.DEAD
+                                            )
+                                        },
 
 
                                         )
@@ -143,22 +174,13 @@ object CharactersTab : Tab {
                                     FilterChip(
 
                                         enabled = true,
-                                        selected = true,
+                                        selected = uiState.selectedCharacterStatus == CharacterStatus.ALIVE,
                                         label = { Text("Alive") },
-                                        onClick = {},
-                                        leadingIcon = {
-                                            Icon(Icons.Default.Done, contentDescription = "")
-                                        }
-
-                                    )
-                                }
-                                item() {
-                                    FilterChip(
-
-                                        enabled = true,
-                                        selected = false,
-                                        label = { Text("Unkown") },
-                                        onClick = {},
+                                        onClick = {
+                                            charactersViewModel.selectStatusFilter(
+                                                CharacterStatus.ALIVE
+                                            )
+                                        },
 
 
                                         )
@@ -167,9 +189,27 @@ object CharactersTab : Tab {
                                     FilterChip(
 
                                         enabled = true,
-                                        selected = false,
+                                        selected = uiState.selectedCharacterStatus == CharacterStatus.UNKNOWN,
+                                        label = { Text("Unkown Status") },
+                                        onClick = {
+                                            charactersViewModel.selectStatusFilter(
+                                                CharacterStatus.UNKNOWN
+                                            )
+                                        },
+
+
+                                        )
+                                }
+                                item() {
+                                    FilterChip(
+
+                                        enabled = true,
+                                        selected = uiState.selectedGender == Gender.MALE,
                                         label = { Text("Male") },
-                                        onClick = {},
+                                        onClick = {
+                                            charactersViewModel.selectGenderFilter(Gender.MALE)
+
+                                        },
 
 
                                         )
@@ -178,9 +218,11 @@ object CharactersTab : Tab {
                                     FilterChip(
 
                                         enabled = true,
-                                        selected = false,
+                                        selected = uiState.selectedGender == Gender.FEMALE,
                                         label = { Text("Female") },
-                                        onClick = {},
+                                        onClick = {
+                                            charactersViewModel.selectGenderFilter(Gender.FEMALE)
+                                        },
 
 
                                         )
@@ -189,9 +231,24 @@ object CharactersTab : Tab {
                                     FilterChip(
 
                                         enabled = true,
-                                        selected = false,
+                                        selected = uiState.selectedGender == Gender.GENDERLESS,
                                         label = { Text("Genderless") },
-                                        onClick = {},
+                                        onClick = {
+                                            charactersViewModel.selectGenderFilter(Gender.GENDERLESS)
+                                        },
+
+
+                                        )
+                                }
+                                item() {
+                                    FilterChip(
+
+                                        enabled = true,
+                                        selected = uiState.selectedGender == Gender.UNKOWN,
+                                        label = { Text("Unkown Gender") },
+                                        onClick = {
+                                            charactersViewModel.selectGenderFilter(Gender.UNKOWN)
+                                        },
 
 
                                         )
@@ -232,34 +289,7 @@ object CharactersTab : Tab {
 
                 }
 
-                if (uiState.showBottomSheet) {
-                    val bottomPadding = WindowInsets.navigationBars.asPaddingValues()
-                        .calculateBottomPadding().value.toInt() + 8
-                    ModalBottomSheet(
-                        modifier = Modifier.padding(bottom = 50.dp),
 
-                        onDismissRequest = {
-                            charactersViewModel.hideBottomSheetFilter()
-                        }, sheetState = sheetState
-                    ) {
-                        FilterBottomSheet(
-                            onFilterButtonClicked = {
-                                charactersViewModel.applyFilter()
-                            },
-                            isFilterButtonEnabled = uiState.isFilterButtonEnabled,
-                            name = uiState.name,
-                            selectedGender = uiState.selectedGender,
-                            onGenderChanged = {
-                                charactersViewModel.selectGenderFilter(it)
-                            }, onNameChange = {
-                                charactersViewModel.updateNameFilter(it)
-                            },
-                            selectedStatus = uiState.selectedCharacterStatus, onStatusClicked = {
-                                charactersViewModel.selectStatusFilter(it)
-                            })
-                    }
-
-                }
             },
 
 

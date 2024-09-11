@@ -7,10 +7,36 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import model.CharacterStatus
-import model.Gender
+
+
 import org.koin.core.component.KoinComponent
 
+
+enum class CharacterStatus {
+
+    ALIVE,
+
+
+    DEAD,
+
+
+    UNKNOWN,
+    UNSELECTED
+}
+
+enum class Gender {
+
+    FEMALE,
+
+
+    MALE,
+
+
+    GENDERLESS,
+
+
+    UNKOWN, UNSELECTED
+}
 
 data class CharactersUIState(
     val characters: List<CharactersQuery.Result?> = emptyList(),
@@ -89,50 +115,55 @@ class CharactersViewModel(val graphQlClient: ApolloClient) : ViewModel(), KoinCo
         }
     }
 
-    fun showBottomSheetFilter() {
-        _uiState.update {
-            it.copy(
-                showBottomSheet = true
-            )
-        }
-    }
-
-    fun hideBottomSheetFilter() {
-        _uiState.update {
-            it.copy(
-                showBottomSheet = false
-            )
-        }
-    }
 
     fun selectStatusFilter(status: CharacterStatus?) {
         _uiState.update {
             it.copy(
-                selectedCharacterStatus = status,
-                isFilterButtonEnabled = status != null
-            )
+                selectedCharacterStatus = if (status == it.selectedCharacterStatus) CharacterStatus.UNSELECTED else status,
+
+                )
         }
+        excuteFilter(
+            status = status,
+            gender = _uiState.asStateFlow().value.selectedGender,
+            name = _uiState.asStateFlow().value.name
+        );
     }
 
     fun selectGenderFilter(gender: Gender?) {
         _uiState.update {
             it.copy(
                 selectedGender = gender,
-                isFilterButtonEnabled = gender != null
-            )
+
+                )
         }
+        excuteFilter(
+            status = _uiState.asStateFlow().value.selectedCharacterStatus,
+            gender = gender,
+            name = _uiState.asStateFlow().value.name
+        );
     }
 
-    fun updateNameFilter(name: String) {
+    fun searchByName(name: String) {
+
+        excuteFilter(
+            status = _uiState.asStateFlow().value.selectedCharacterStatus,
+            gender = _uiState.asStateFlow().value.selectedGender,
+            name = _uiState.asStateFlow().value.name
+        );
+    }
+
+    fun updateSearchName(name: String) {
         _uiState.update {
             it.copy(
                 name = name,
-                isFilterButtonEnabled = name.isNotEmpty()
-            )
+
+                )
         }
+
     }
 
-    fun applyFilter() {
+    private fun excuteFilter(name: String?, status: CharacterStatus?, gender: Gender?) {
 
         viewModelScope.launch {
             try {
@@ -143,9 +174,9 @@ class CharactersViewModel(val graphQlClient: ApolloClient) : ViewModel(), KoinCo
                     CharactersQuery(
                         filter = Optional.present(
                             FilterCharacter(
-                                name = Optional.present(_uiState.asStateFlow().value.name),
-                                status = Optional.present(_uiState.asStateFlow().value.selectedCharacterStatus?.name),
-                                gender = Optional.present(_uiState.asStateFlow().value.selectedGender?.name),
+                                name = if (name != null) Optional.present(name) else Optional.absent(),
+                                status = if (status != null) Optional.present(status.name) else Optional.absent(),
+                                gender = if (gender != null) Optional.present(gender.name) else Optional.absent(),
                             )
                         )
                     )
@@ -171,14 +202,21 @@ class CharactersViewModel(val graphQlClient: ApolloClient) : ViewModel(), KoinCo
         }
     }
 
-    fun restFilter() {
+
+    fun clearSearch() {
         _uiState.update {
             it.copy(
-                isFilterButtonEnabled = false,
+
                 name = "",
-                selectedCharacterStatus = null,
-                selectedGender = null
-            )
+
+                )
         }
+
+        excuteFilter(
+            status = _uiState.asStateFlow().value.selectedCharacterStatus,
+            gender = _uiState.asStateFlow().value.selectedGender,
+            name = null
+        );
+
     }
 }

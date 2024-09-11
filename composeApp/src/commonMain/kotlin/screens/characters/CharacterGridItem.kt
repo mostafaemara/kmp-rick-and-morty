@@ -23,11 +23,21 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun CharacterGridItem(character: Character, onClick: () -> Unit) {
 
-    Card() {
+    Card(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
+        ),
+
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        )
+
+
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth().height(115.dp).clip(
                 RoundedCornerShape(
-                    12.dp
+                    8.dp
 
                 )
 

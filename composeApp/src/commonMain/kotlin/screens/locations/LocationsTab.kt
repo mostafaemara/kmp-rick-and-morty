@@ -2,12 +2,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
@@ -23,8 +26,9 @@ object LocationsTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
+            val icon = rememberVectorPainter(Icons.Filled.LocationOn);
             return remember {
-                TabOptions(index = 1u, title = "Locations", icon = null)
+                TabOptions(index = 1u, title = "Locations", icon = icon)
             }
         }
 

@@ -3,7 +3,7 @@ package di
 
 import CharactersViewModel
 import EpisodesViewModel
-import RickAndMortyApi
+
 import com.apollographql.apollo.ApolloClient
 
 import org.koin.core.context.startKoin
@@ -15,7 +15,7 @@ import screens.locationDetails.LocationDetailsViewModel
 import screens.locations.LocationsViewModel
 
 val appModule: Module = module {
-    single<RickAndMortyApi> { RickAndMortyApi() }
+
     single { ApolloClient.Builder().serverUrl("https://rickandmortyapi.com/graphql").build() }
     factory { CharactersViewModel(get()) }
     factory { LocationsViewModel(get()) }

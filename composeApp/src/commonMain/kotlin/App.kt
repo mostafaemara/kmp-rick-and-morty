@@ -23,12 +23,14 @@ fun commonApp() {
     KoinApplication(application = {
         modules(appModule)
     }) {
-        AppTheme(content = {
+        AppTheme(
 
-            Navigator(HomeScreen)
+            content = {
+
+                Navigator(HomeScreen)
 
 
-        })
+            })
     }
 
 }
