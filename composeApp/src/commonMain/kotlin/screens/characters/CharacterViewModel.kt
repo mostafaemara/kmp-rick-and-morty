@@ -3,6 +3,8 @@ import com.apollographql.apollo.api.Optional
 import com.rickandmorty.graphql.CharactersQuery
 import com.rickandmorty.graphql.type.FilterCharacter
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -44,21 +46,22 @@ data class CharactersUIState(
     val nextStatus: Status = Status.IDLE,
     val selectedCharacterStatus: CharacterStatus? = null,
     val selectedGender: Gender? = null,
-    val showBottomSheet: Boolean = false,
+
     val name: String = "",
-    val isFilterButtonEnabled: Boolean = false
-
-)
+    val isSearchEnabled: Boolean = false,
 
 
-class CharactersViewModel(val graphQlClient: ApolloClient) : ViewModel(), KoinComponent {
+    )
 
 
+class CharactersViewModel(private val graphQlClient: ApolloClient) : ViewModel(), KoinComponent {
+
+    private var searchJob: Job? = null
     private val _uiState = MutableStateFlow(CharactersUIState())
 
     val uiState = _uiState.asStateFlow()
 
-    var _nextPage: Int? = null;
+    private var _nextPage: Int? = null;
 
     fun getCharacters() {
 
@@ -124,36 +127,30 @@ class CharactersViewModel(val graphQlClient: ApolloClient) : ViewModel(), KoinCo
                 )
         }
         excuteFilter(
-            status = status,
-            gender = _uiState.asStateFlow().value.selectedGender,
-            name = _uiState.asStateFlow().value.name
+
         );
     }
 
     fun selectGenderFilter(gender: Gender?) {
+
+
         _uiState.update {
+
+
             it.copy(
-                selectedGender = gender,
+                selectedGender = if (it.selectedGender == gender) Gender.UNSELECTED else gender,
 
                 )
         }
         excuteFilter(
-            status = _uiState.asStateFlow().value.selectedCharacterStatus,
-            gender = gender,
-            name = _uiState.asStateFlow().value.name
+
         );
     }
 
-    fun searchByName(name: String) {
-
-        excuteFilter(
-            status = _uiState.asStateFlow().value.selectedCharacterStatus,
-            gender = _uiState.asStateFlow().value.selectedGender,
-            name = _uiState.asStateFlow().value.name
-        );
-    }
 
     fun updateSearchName(name: String) {
+
+
         _uiState.update {
             it.copy(
                 name = name,
@@ -161,10 +158,18 @@ class CharactersViewModel(val graphQlClient: ApolloClient) : ViewModel(), KoinCo
                 )
         }
 
+        searchJob?.cancel();
+        searchJob = viewModelScope.launch {
+            delay(500)
+            excuteFilter()
+        }
+
     }
 
-    private fun excuteFilter(name: String?, status: CharacterStatus?, gender: Gender?) {
-
+    private fun excuteFilter() {
+        val status = _uiState.asStateFlow().value.selectedCharacterStatus;
+        val gender = _uiState.asStateFlow().value.selectedGender;
+        val name = _uiState.asStateFlow().value.name;
         viewModelScope.launch {
             try {
                 _uiState.update {
@@ -174,9 +179,13 @@ class CharactersViewModel(val graphQlClient: ApolloClient) : ViewModel(), KoinCo
                     CharactersQuery(
                         filter = Optional.present(
                             FilterCharacter(
-                                name = if (name != null) Optional.present(name) else Optional.absent(),
-                                status = if (status != null) Optional.present(status.name) else Optional.absent(),
-                                gender = if (gender != null) Optional.present(gender.name) else Optional.absent(),
+                                name = if (name.isEmpty()) Optional.absent() else Optional.present(name),
+                                status = if (status == null || status == CharacterStatus.UNSELECTED) Optional.absent() else Optional.present(
+                                    status.name
+                                ),
+                                gender = if (gender == null || gender == Gender.UNSELECTED) Optional.absent() else Optional.present(
+                                    gender.name
+                                ),
                             )
                         )
                     )
@@ -213,9 +222,7 @@ class CharactersViewModel(val graphQlClient: ApolloClient) : ViewModel(), KoinCo
         }
 
         excuteFilter(
-            status = _uiState.asStateFlow().value.selectedCharacterStatus,
-            gender = _uiState.asStateFlow().value.selectedGender,
-            name = null
+
         );
 
     }

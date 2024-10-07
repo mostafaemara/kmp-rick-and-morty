@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -109,182 +110,194 @@ object CharactersTab : Tab {
             content = { padding ->
 
 
-                when (uiState.status) {
-                    Status.SUCCESS ->
-                        Column(
-                            modifier = Modifier.padding(padding)
-                        ) {
-                            Box(
-                                modifier = Modifier.background(MaterialTheme.colorScheme.surface)
-                            ) {
-                                TextField(
-                                    uiState.name,
+                Column(
+                    modifier = Modifier.padding(padding)
+                ) {
+                    Box(
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+                    ) {
+                        TextField(
 
-                                    onValueChange = {
-                                        charactersViewModel.updateSearchName(it)
-                                    },
+                            uiState.name, placeholder = {
+                                Text("Search Character")
+                            },
 
-                                    trailingIcon = {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Search,
-                                            contentDescription = "Search"
-                                        )
-                                    },
-                                    modifier = Modifier.fillMaxWidth()
-                                        .padding(bottom = 12.dp, start = 12.dp, end = 12.dp)
+                            onValueChange = {
+                                charactersViewModel.updateSearchName(it)
+                            },
 
-                                        .clip(
-                                            shape = RoundedCornerShape(
-                                                size = 50.dp
+                            trailingIcon = {
+                                if (uiState.name.isNotEmpty())
+                                    IconButton(
+                                        onClick = { charactersViewModel.clearSearch() },
+
+
+                                        content = {
+
+                                            Icon(
+                                                imageVector = Icons.Outlined.Close,
+                                                contentDescription = "clear Search",
                                             )
-                                        ),
-                                    colors = TextFieldDefaults.colors(
-                                        focusedIndicatorColor = Color.Transparent,
-                                        unfocusedIndicatorColor = Color.Transparent,
+                                        }
+                                    )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(bottom = 12.dp, start = 12.dp, end = 12.dp)
 
-                                        )
+                                .clip(
+                                    shape = RoundedCornerShape(
+                                        size = 50.dp
+                                    )
+                                ),
+                            colors = TextFieldDefaults.colors(
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
 
                                 )
+
+                        )
+                    }
+                    LazyRow(
+
+                        state = filterListState,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.padding(horizontal = 12.dp)
+
+
+                    ) {
+
+                        item() {
+                            FilterChip(
+
+                                enabled = true,
+                                selected = uiState.selectedCharacterStatus == CharacterStatus.DEAD,
+                                label = { Text("Dead") },
+                                onClick = {
+                                    charactersViewModel.selectStatusFilter(
+                                        CharacterStatus.DEAD
+                                    )
+                                },
+
+
+                                )
+                        }
+                        item() {
+                            FilterChip(
+
+                                enabled = true,
+                                selected = uiState.selectedCharacterStatus == CharacterStatus.ALIVE,
+                                label = { Text("Alive") },
+                                onClick = {
+                                    charactersViewModel.selectStatusFilter(
+                                        CharacterStatus.ALIVE
+                                    )
+                                },
+
+
+                                )
+                        }
+                        item() {
+                            FilterChip(
+
+                                enabled = true,
+                                selected = uiState.selectedCharacterStatus == CharacterStatus.UNKNOWN,
+                                label = { Text("Unkown Status") },
+                                onClick = {
+                                    charactersViewModel.selectStatusFilter(
+                                        CharacterStatus.UNKNOWN
+                                    )
+                                },
+
+
+                                )
+                        }
+                        item() {
+                            FilterChip(
+
+                                enabled = true,
+                                selected = uiState.selectedGender == Gender.MALE,
+                                label = { Text("Male") },
+                                onClick = {
+                                    charactersViewModel.selectGenderFilter(Gender.MALE)
+
+                                },
+
+
+                                )
+                        }
+                        item() {
+                            FilterChip(
+
+                                enabled = true,
+                                selected = uiState.selectedGender == Gender.FEMALE,
+                                label = { Text("Female") },
+                                onClick = {
+                                    charactersViewModel.selectGenderFilter(Gender.FEMALE)
+                                },
+
+
+                                )
+                        }
+                        item() {
+                            FilterChip(
+
+                                enabled = true,
+                                selected = uiState.selectedGender == Gender.GENDERLESS,
+                                label = { Text("Genderless") },
+                                onClick = {
+                                    charactersViewModel.selectGenderFilter(Gender.GENDERLESS)
+                                },
+
+
+                                )
+                        }
+                        item() {
+                            FilterChip(
+
+                                enabled = true,
+                                selected = uiState.selectedGender == Gender.UNKOWN,
+                                label = { Text("Unkown Gender") },
+                                onClick = {
+                                    charactersViewModel.selectGenderFilter(Gender.UNKOWN)
+                                },
+
+
+                                )
+                        }
+                    }
+                    when (uiState.status) {
+                        Status.SUCCESS -> LazyVerticalGrid(
+                            columns = GridCells.Adaptive(minSize = 400.dp),
+
+
+                            state = gridState, modifier = Modifier.padding(horizontal = 12.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(uiState.characters) { character ->
+                                CharacterGridItem(
+                                    character = character!!,
+
+                                    onClick = {
+                                        navigator?.push(CharacterScreen(characterId = character!!.id!!))
+                                    })
                             }
-                            LazyRow(
-
-                                state = filterListState,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.padding(horizontal = 12.dp)
 
 
-                            ) {
-
-                                item() {
-                                    FilterChip(
-
-                                        enabled = true,
-                                        selected = uiState.selectedCharacterStatus == CharacterStatus.DEAD,
-                                        label = { Text("Dead") },
-                                        onClick = {
-                                            charactersViewModel.selectStatusFilter(
-                                                CharacterStatus.DEAD
-                                            )
-                                        },
-
-
-                                        )
-                                }
-                                item() {
-                                    FilterChip(
-
-                                        enabled = true,
-                                        selected = uiState.selectedCharacterStatus == CharacterStatus.ALIVE,
-                                        label = { Text("Alive") },
-                                        onClick = {
-                                            charactersViewModel.selectStatusFilter(
-                                                CharacterStatus.ALIVE
-                                            )
-                                        },
-
-
-                                        )
-                                }
-                                item() {
-                                    FilterChip(
-
-                                        enabled = true,
-                                        selected = uiState.selectedCharacterStatus == CharacterStatus.UNKNOWN,
-                                        label = { Text("Unkown Status") },
-                                        onClick = {
-                                            charactersViewModel.selectStatusFilter(
-                                                CharacterStatus.UNKNOWN
-                                            )
-                                        },
-
-
-                                        )
-                                }
-                                item() {
-                                    FilterChip(
-
-                                        enabled = true,
-                                        selected = uiState.selectedGender == Gender.MALE,
-                                        label = { Text("Male") },
-                                        onClick = {
-                                            charactersViewModel.selectGenderFilter(Gender.MALE)
-
-                                        },
-
-
-                                        )
-                                }
-                                item() {
-                                    FilterChip(
-
-                                        enabled = true,
-                                        selected = uiState.selectedGender == Gender.FEMALE,
-                                        label = { Text("Female") },
-                                        onClick = {
-                                            charactersViewModel.selectGenderFilter(Gender.FEMALE)
-                                        },
-
-
-                                        )
-                                }
-                                item() {
-                                    FilterChip(
-
-                                        enabled = true,
-                                        selected = uiState.selectedGender == Gender.GENDERLESS,
-                                        label = { Text("Genderless") },
-                                        onClick = {
-                                            charactersViewModel.selectGenderFilter(Gender.GENDERLESS)
-                                        },
-
-
-                                        )
-                                }
-                                item() {
-                                    FilterChip(
-
-                                        enabled = true,
-                                        selected = uiState.selectedGender == Gender.UNKOWN,
-                                        label = { Text("Unkown Gender") },
-                                        onClick = {
-                                            charactersViewModel.selectGenderFilter(Gender.UNKOWN)
-                                        },
-
-
-                                        )
-                                }
-                            }
-                            LazyVerticalGrid(
-                                columns = GridCells.Adaptive(minSize = 400.dp),
-
-
-                                state = gridState, modifier = Modifier.padding(horizontal = 12.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                items(uiState.characters) { character ->
-                                    CharacterGridItem(
-                                        character = character!!,
-
-                                        onClick = {
-                                            navigator?.push(CharacterScreen(characterId = character!!.id!!))
-                                        })
-                                }
-
-
-                            }
                         }
 
-                    Status.IDLE, Status.LOADING -> Box(
-                        modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                        Status.IDLE, Status.LOADING -> Box(
+                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
 
-                    Status.ERROR -> Box(
-                        modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-                    ) {
-                        Text("Somthing Went Wrong")
+                        Status.ERROR -> Box(
+                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+                        ) {
+                            Text("Somthing Went Wrong")
+                        }
+
                     }
 
                 }

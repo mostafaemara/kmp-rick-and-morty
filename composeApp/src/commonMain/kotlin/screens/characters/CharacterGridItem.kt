@@ -28,9 +28,9 @@ fun CharacterGridItem(character: Character, onClick: () -> Unit) {
             defaultElevation = 3.dp
         ),
 
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        )
+//        colors = CardDefaults.cardColors(
+//            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+//        )
 
 
     ) {
@@ -77,17 +77,12 @@ fun CharacterGridItem(character: Character, onClick: () -> Unit) {
                     VerticalDivider(modifier = Modifier.height(10.dp))
                     Text(character.species!!, style = MaterialTheme.typography.labelMedium)
                 }
-                Column {
-                    Text("Last known location:", style = MaterialTheme.typography.labelSmall)
+                if (character.location?.name != null)
+                    Column {
+                        Text("Last known location:", style = MaterialTheme.typography.labelSmall)
 
-                    Text("Last known location: Citadel of Ricks", style = MaterialTheme.typography.bodySmall)
-                }
-
-//                Column {
-//                    Text("First Seen:", style = MaterialTheme.typography.labelSmall)
-//
-//                    Text("The Ricklantis Mixup", style = MaterialTheme.typography.bodySmall)
-//                }
+                        Text(character.location.name, style = MaterialTheme.typography.bodySmall)
+                    }
 
 
             }
