@@ -95,7 +95,14 @@ class CharacterScreen(private val characterId: String) : Screen {
                             style = MaterialTheme.typography.headlineLarge
                         )
 
-                        CharacterHeader(uiState.character!!)
+                        CharacterHeader(
+                            location = uiState.character!!.location!!.name!!,
+                            image = uiState.character!!.image!!,
+                            status = uiState.character!!.status!!,
+                            species = uiState.character!!.species!!,
+                            gender = uiState.character!!.gender!!,
+                            orifin = uiState.character!!.origin!!.name!!
+                        )
 
                         Row {
                             Text(
@@ -127,7 +134,7 @@ class CharacterScreen(private val characterId: String) : Screen {
                                         navigator.push(EpisodeScreen(episodeId = it?.id ?: ""))
                                     }
 
-                                    )
+                                )
                             }
 
                         }

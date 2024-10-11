@@ -1,28 +1,21 @@
 package screens.character
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Chip
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.outlined.Biotech
-import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.rickandmorty.graphql.CharacterQuery
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -31,12 +24,12 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun CharacterHeader(
-    image:String,
-    status:String,
-    species:String,
-    gender:String,
-    orifin:String,
-    location:String
+    image: String,
+    status: String,
+    species: String,
+    gender: String,
+    orifin: String,
+    location: String
 
 ) {
     Column {
@@ -45,106 +38,84 @@ fun CharacterHeader(
 
                 resource = asyncPainterResource(image),
                 contentDescription = image,
-                modifier = Modifier.height(150.dp).width(150.dp),
+                modifier = Modifier.height(215.dp).width(215.dp),
                 contentScale = ContentScale.FillWidth
             )
             Column {
                 FlowRow(
-               modifier=Modifier.padding(4.dp).fillMaxWidth(),
+                    modifier = Modifier.padding().fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
+
+                    ) {
                     AssistChip(
+                        leadingIcon = {
+                            Icon(
+                                Icons.Filled.Circle,
+                                tint = when (status) {
+                                    "Alive" -> Color.Green
+
+                                    "Dead" -> Color.Red
+                                    else -> Color.Gray
+                                },
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        },
                         onClick = {},
-                        label= {Text(status!!)}
+                        label = { Text(status) }
 
 
                     )
                     AssistChip(
+                        leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null) },
                         onClick = {},
-                        label= {Text(status!!)}
+                        label = { Text(gender) }
 
 
                     )
                     AssistChip(
+                        leadingIcon = { Icon(Icons.Outlined.Biotech, contentDescription = null) },
                         onClick = {},
-                        label= {Text(status!!)}
+                        label = { Text(species) }
 
 
                     )
 
                 }
-                InfoListTile(
-                    title = "Status",
-                    trailing = status!!,
-                    leading = {
-                        Box(
-                            modifier = Modifier.size(24.dp).clip(CircleShape)
-                                .background(color = Color.Green)
-                        )
-                    }
+                Text("Origin:", style = MaterialTheme.typography.labelSmall)
+                Text(
+                    orifin,
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
                 )
-                HorizontalDivider()
-                InfoListTile(
-                    title = "Specie", trailing =species!!,
-                    leading = {
-                        Icon(
-                            Icons.Outlined.Biotech,
-                            contentDescription = "species",
-                        )
-                    }
+                Box(modifier = Modifier.height(10.dp))
+                Text("Last known location:", style = MaterialTheme.typography.labelSmall)
+                Text(
+                    location,
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
                 )
-                HorizontalDivider()
-                InfoListTile(
-                    title = "Gender",
-                    trailing = gender,
-                    leading = {
-                        Icon(
-                            Icons.Outlined.Person, contentDescription = "gender"
-
-                        )
-                    }
-                )
-
 
             }
         }
-        InfoListTile(
-            title = "Origin",
-            trailing =orifin,
-            leading = {
-                Icon(
-                    Icons.Outlined.Place, contentDescription = "gender"
 
-                )
-            }
-        )
 
-        InfoListTile(
-            title = "Location",
-            trailing = location,
-            leading = {
-                Icon(
-                    Icons.Outlined.MyLocation, contentDescription = "gender"
-
-                )
-            }
-        )
     }
 }
 
 @Composable
 @Preview
-fun CharacterHeaderPreview(){
+fun CharacterHeaderPreview() {
 
     CharacterHeader(
 
-        status = "",
-image="",
-orifin="",
-gender = "Male",
-species = "",
-location = "")
+        status = "Dead",
+        image = "https://lh5.googleusercontent.com/proxy/t08n2HuxPfw8OpbutGWjekHAgxfPFv-pZZ5_-uTfhEGK8B5Lp-VN4VjrdxKtr8acgJA93S14m9NdELzjafFfy13b68pQ7zzDiAmn4Xg8LvsTw1jogn_7wStYeOx7ojx5h63Gliw",
+        orifin = "The Ricklantis Mixup",
+        gender = "Male",
+        species = "Human",
+        location = "Citadel of Ricks"
+    )
 
 
 }
