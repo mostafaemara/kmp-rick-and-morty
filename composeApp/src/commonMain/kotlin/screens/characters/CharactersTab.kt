@@ -1,11 +1,6 @@
 package  screens.characters
 
-import CharacterStatus
-import CharactersViewModel
-import Gender
 import Status
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -13,28 +8,21 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import kmp_rick_and_morty.composeapp.generated.resources.Res
-import kmp_rick_and_morty.composeapp.generated.resources.logo
-import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import screens.character.CharacterScreen
+import screens.common.AppSearchBar
 
 
 object CharactersTab : Tab {
@@ -43,7 +31,7 @@ object CharactersTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val icon = rememberVectorPainter(Icons.Filled.AccountCircle);
+            val icon = rememberVectorPainter(Icons.Filled.AccountCircle)
             return remember {
                 TabOptions(index = 0u, title = "Characters", icon = icon)
             }
@@ -56,14 +44,14 @@ object CharactersTab : Tab {
     override fun Content() {
 
         val charactersViewModel: CharactersViewModel = koinInject<CharactersViewModel
-            >()
+                >()
 
         val uiState by charactersViewModel.uiState.collectAsState()
         val gridState = rememberLazyGridState()
         val filterListState = rememberLazyListState()
         val navigator = LocalNavigator.currentOrThrow.parent;
 
-        val sheetState = rememberModalBottomSheetState()
+
 
         LaunchedEffect(charactersViewModel) {
             charactersViewModel.getCharacters()
@@ -81,31 +69,6 @@ object CharactersTab : Tab {
 
             containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
 
-            topBar = {
-
-                TopAppBar(
-
-
-                    title = {
-
-                        Image(
-
-                            painter = painterResource(
-                                Res.drawable.logo
-                            ),
-                            contentDescription = "logo",
-                            alignment = Alignment.Center,
-                            modifier = Modifier.fillMaxWidth().height(40.dp)
-
-                        )
-
-
-                    },
-                )
-
-
-            },
-
 
             content = { padding ->
 
@@ -113,50 +76,17 @@ object CharactersTab : Tab {
                 Column(
                     modifier = Modifier.padding(padding)
                 ) {
-                    Box(
-                        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
-                    ) {
-                        TextField(
+                    AppSearchBar(
+                        searchHint = "Search Characters",
+                        value = uiState.name,
+                        onSearchClear = {
+                            charactersViewModel.clearSearch()
+                        },
+                        onValueChange = { it ->
+                            charactersViewModel.updateSearchName(it)
+                        }
 
-                            uiState.name, placeholder = {
-                                Text("Search Character")
-                            },
-
-                            onValueChange = {
-                                charactersViewModel.updateSearchName(it)
-                            },
-
-                            trailingIcon = {
-                                if (uiState.name.isNotEmpty())
-                                    IconButton(
-                                        onClick = { charactersViewModel.clearSearch() },
-
-
-                                        content = {
-
-                                            Icon(
-                                                imageVector = Icons.Outlined.Close,
-                                                contentDescription = "clear Search",
-                                            )
-                                        }
-                                    )
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(bottom = 12.dp, start = 12.dp, end = 12.dp)
-
-                                .clip(
-                                    shape = RoundedCornerShape(
-                                        size = 50.dp
-                                    )
-                                ),
-                            colors = TextFieldDefaults.colors(
-                                focusedIndicatorColor = Color.Transparent,
-                                unfocusedIndicatorColor = Color.Transparent,
-
-                                )
-
-                        )
-                    }
+                    )
                     LazyRow(
 
                         state = filterListState,
@@ -256,7 +186,7 @@ object CharactersTab : Tab {
 
                                 enabled = true,
                                 selected = uiState.selectedGender == Gender.UNKOWN,
-                                label = { Text("Unkown Gender") },
+                                label = { Text("Unkown screens.characters.Gender") },
                                 onClick = {
                                     charactersViewModel.selectGenderFilter(Gender.UNKOWN)
                                 },
@@ -308,5 +238,6 @@ object CharactersTab : Tab {
 
             )
     }
+
 
 }

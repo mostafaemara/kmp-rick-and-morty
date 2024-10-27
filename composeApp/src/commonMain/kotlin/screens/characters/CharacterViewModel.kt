@@ -1,3 +1,6 @@
+package screens.characters
+
+import Status
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.rickandmorty.graphql.CharactersQuery
@@ -61,7 +64,7 @@ class CharactersViewModel(private val graphQlClient: ApolloClient) : ViewModel()
 
     val uiState = _uiState.asStateFlow()
 
-    private var _nextPage: Int? = null;
+    private var _nextPage: Int? = null
 
     fun getCharacters() {
 

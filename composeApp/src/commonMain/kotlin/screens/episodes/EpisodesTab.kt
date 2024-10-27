@@ -3,7 +3,9 @@ package screens.episodes
 import EpisodesViewModel
 import Status.*
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -23,6 +25,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
+import screens.common.AppSearchBar
 import screens.common.EpisodeListItem
 import screens.episode.EpisodeScreen
 
@@ -63,24 +66,41 @@ object EpisodesTab : Tab {
             content = { padding ->
                 when (uiState.status) {
 
-                    SUCCESS -> LazyColumn(
-                        state = listState
-                    ) {
-                        items(uiState.episodes?.size ?: 0) { index ->
-                            EpisodeListItem(
-                                episode = uiState.episodes?.get(index)?.episode ?: "",
-                                name = uiState.episodes?.get(index)?.name ?: "",
-                                airDate = uiState.episodes?.get(index)?.air_date ?: "",
-                                onClick = {
-                                    navigator.parent?.push(
-                                        EpisodeScreen(
-                                            episodeId = uiState.episodes?.get(index)?.id ?: ""
-                                        )
-                                    )
+                    SUCCESS ->
+                        Column(
+                            modifier = Modifier.padding(padding)
+                        ) {
+                            AppSearchBar(
+                                searchHint = "Search Episodes",
+                                value = "",
+                                onSearchClear = {
 
-                                })
+                                },
+                                onValueChange = { it ->
+
+                                }
+
+                            )
+                            LazyColumn(
+                                state = listState
+                            ) {
+                                items(uiState.episodes?.size ?: 0) { index ->
+                                    EpisodeListItem(
+                                        episode = uiState.episodes?.get(index)?.episode ?: "",
+                                        name = uiState.episodes?.get(index)?.name ?: "",
+                                        airDate = uiState.episodes?.get(index)?.air_date ?: "",
+                                        onClick = {
+                                            navigator.parent?.push(
+                                                EpisodeScreen(
+                                                    episodeId = uiState.episodes?.get(index)?.id ?: ""
+                                                )
+                                            )
+
+                                        })
+                                }
+                            }
                         }
-                    }
+
 
                     IDLE, LOADING -> Box(
                         modifier = Modifier.fillMaxSize(),

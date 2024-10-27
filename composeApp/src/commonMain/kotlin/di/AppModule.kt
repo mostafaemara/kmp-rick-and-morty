@@ -1,7 +1,7 @@
 package di
 
 
-import CharactersViewModel
+import screens.characters.CharactersViewModel
 import EpisodesViewModel
 
 import com.apollographql.apollo.ApolloClient
