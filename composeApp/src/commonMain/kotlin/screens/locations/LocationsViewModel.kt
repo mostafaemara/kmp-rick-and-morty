@@ -13,19 +13,37 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+enum class LocationType(val value: String) {
+
+    UNSELECTED(""),
+    PLANET("Planet"),
+    CLUSTER("Cluster"),
+    SPACE_STATION("Space station"),
+    MICROVERSE("Microverse"),
+    RESORT("Resort"),
+    TV("Tv"),
+    FANTASY_TOWN("Fantasy town"),
+    DREAM("Dream"),
+    CUSTOMS("Customs"),
+    GAME("Game");
+
+
+}
+
 data class LocationsUIState(
     val locations: List<LocationsQuery.Result> = emptyList(),
     val status: Status = Status.LOADING,
     val nextStatus: Status = Status.IDLE,
     val isSarchActive: Boolean = false,
     val query: String = "",
+    val selectedType: LocationType = LocationType.UNSELECTED
 
-    )
+)
 
-class LocationsViewModel(val graphqlApi: ApolloClient) : ViewModel() {
+class LocationsViewModel(private val graphqlApi: ApolloClient) : ViewModel() {
     private val _uiState = MutableStateFlow<LocationsUIState>(LocationsUIState())
     val uiState = _uiState.asStateFlow()
-    var _nextPage: Int? = 0
+    private var _nextPage: Int? = 0
     private var searchJob: Job? = null
     fun getLocations() {
         viewModelScope.launch {
@@ -98,6 +116,23 @@ class LocationsViewModel(val graphqlApi: ApolloClient) : ViewModel() {
 
     }
 
+    fun selectLocationType(type: LocationType) {
+        var selectedTpe = _uiState.asStateFlow().value.selectedType;
+        selectedTpe = if (selectedTpe == type) {
+            LocationType.UNSELECTED;
+        } else {
+            type;
+        }
+        _uiState.update {
+            it.copy(
+                selectedType = selectedTpe
+            )
+        }
+        excuteFilters()
+
+
+    }
+
     fun restSearch() {
         _uiState.update {
             it.copy(
@@ -112,6 +147,7 @@ class LocationsViewModel(val graphqlApi: ApolloClient) : ViewModel() {
         viewModelScope.launch {
             try {
                 val query = _uiState.asStateFlow().value.query;
+                val selectedTpe = _uiState.asStateFlow().value.selectedType;
 
                 _uiState.update {
                     it.copy(
@@ -124,8 +160,10 @@ class LocationsViewModel(val graphqlApi: ApolloClient) : ViewModel() {
                         filter = Optional.present(
                             FilterLocation(
                                 name = if (query.isEmpty()) Optional.absent() else Optional.present(query),
-                                dimension = Optional.absent(),
-                                type = Optional.absent()
+
+                                type = if (selectedTpe == LocationType.UNSELECTED) Optional.absent() else Optional.present(
+                                    selectedTpe.value
+                                )
                             )
                         )
 

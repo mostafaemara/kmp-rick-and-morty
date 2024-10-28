@@ -4,6 +4,7 @@ import Status
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -88,138 +89,22 @@ object LocationsTab : Tab {
 
 
                     ) {
+                        items(LocationType.entries) { it ->
+                            if (it != LocationType.UNSELECTED)
+                                FilterChip(
 
-                        item() {
-                            FilterChip(
-
-                                enabled = true,
-                                selected = true,
-                                label = { Text("Planet") },
-                                onClick = {
-
-                                },
+                                    enabled = true,
+                                    selected = it == uiState.selectedType,
+                                    label = { Text(it.value) },
+                                    onClick = {
+                                        locationsViewModel.selectLocationType(it)
+                                    },
 
 
-                                )
+                                    )
                         }
-                        item() {
-                            FilterChip(
-
-                                enabled = true,
-                                selected = true,
-                                label = { Text("Cluster") },
-                                onClick = {
-
-                                },
 
 
-                                )
-                        }
-                        item() {
-                            FilterChip(
-
-                                enabled = true,
-                                selected = true,
-                                label = { Text("Space station") },
-                                onClick = {
-
-                                },
-
-
-                                )
-                        }
-                        item() {
-                            FilterChip(
-
-                                enabled = true,
-                                selected = true,
-                                label = { Text("Microverse") },
-                                onClick = {
-
-
-                                },
-
-
-                                )
-                        }
-                        item() {
-                            FilterChip(
-
-                                enabled = true,
-                                selected = true,
-                                label = { Text("Resort") },
-                                onClick = {
-
-                                },
-
-
-                                )
-                        }
-                        item() {
-                            FilterChip(
-
-                                enabled = true,
-                                selected = true,
-                                label = { Text("TV") },
-                                onClick = {
-
-                                },
-
-
-                                )
-                        }
-                        item {
-                            FilterChip(
-
-                                enabled = true,
-                                selected = true,
-                                label = { Text("Fantasy town") },
-                                onClick = {
-
-                                },
-
-
-                                )
-                        }
-                        item {
-                            FilterChip(
-
-                                enabled = true,
-                                selected = true,
-                                label = { Text("Dream") },
-                                onClick = {
-
-                                },
-
-
-                                )
-                        }
-                        item {
-                            FilterChip(
-
-                                enabled = true,
-                                selected = true,
-                                label = { Text("Customs") },
-                                onClick = {
-
-                                },
-
-
-                                )
-                        }
-                        item {
-                            FilterChip(
-
-                                enabled = true,
-                                selected = true,
-                                label = { Text("Game") },
-                                onClick = {
-
-                                },
-
-
-                                )
-                        }
                     }
                     when (uiState.status) {
 
