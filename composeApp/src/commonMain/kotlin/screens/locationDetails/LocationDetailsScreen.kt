@@ -10,6 +10,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBackIos
 import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
+import androidx.compose.material.icons.outlined.Layers
+import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -91,15 +94,28 @@ private fun ScreenContent(uiState: LocationDetailsUIState) {
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
 
-                            Text(uiState.locationDetails?.name ?: "", style = MaterialTheme.typography.headlineLarge)
+                            Text(uiState.locationDetails?.name ?: "", style = MaterialTheme.typography.titleLarge)
 
-                            LocationDetailsHeader(
-
-                                dimension = uiState.locationDetails?.dimension ?: "",
-                                type = uiState.locationDetails?.type ?: ""
-                            )
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                AssistChip(
+                                    leadingIcon = { Icon(Icons.Outlined.LocationOn, contentDescription = "") },
+                                    onClick = {},
+                                    label = {
+                                        Text(uiState.locationDetails!!.type)
+                                    }
+                                )
+                                AssistChip(
+                                    leadingIcon = { Icon(Icons.Outlined.Layers, contentDescription = "") },
+                                    onClick = {},
+                                    label = {
+                                        Text(uiState.locationDetails!!.dimension)
+                                    }
+                                )
+                            }
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text("Residents", style = MaterialTheme.typography.labelLarge)
+                                Text("Residents", style = MaterialTheme.typography.titleMedium)
                                 LazyColumn {
                                     uiState.locationDetails?.residents.let { residents ->
                                         items(residents?.size ?: 0) {
