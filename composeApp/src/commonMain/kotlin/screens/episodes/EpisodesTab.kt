@@ -64,23 +64,32 @@ object EpisodesTab : Tab {
         Scaffold(
 
             content = { padding ->
-                when (uiState.status) {
 
-                    SUCCESS ->
-                        Column(
-                            modifier = Modifier.padding(padding)
-                        ) {
-                            AppSearchBar(
-                                searchHint = "Search Episodes",
-                                value = "",
-                                onSearchClear = {
+                Column(
+                    modifier = Modifier.padding(padding)
+                ) {
+                    AppSearchBar(
+                        searchHint = "Search Episodes",
+                        value = uiState.query,
+                        onSearchClear = {
+                            episodesViewModel.clearSearch()
 
-                                },
-                                onValueChange = { it ->
-
-                                }
-
+                        },
+                        onValueChange = { it ->
+                            episodesViewModel.updateSearchQuery(
+                                it
                             )
+
+                        }
+
+
+                    )
+
+                    when (uiState.status) {
+
+                        SUCCESS ->
+
+
                             LazyColumn(
                                 state = listState
                             ) {
@@ -99,29 +108,26 @@ object EpisodesTab : Tab {
                                         })
                                 }
                             }
+
+
+                        IDLE, LOADING -> Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
                         }
 
-
-                    IDLE, LOADING -> Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+                        ERROR -> Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("Somthing Went Wrong")
+                        }
                     }
 
-                    ERROR -> Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("Somthing Went Wrong")
-                    }
+
                 }
-
-
-            },
-
-
-            )
+            })
     }
 }
 
