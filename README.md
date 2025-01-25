@@ -11,7 +11,7 @@ This project is a Kotlin Multiplatform application that uses the [Rick and Morty
   - [Dependency Injection (DI)](#dependency-injection-di)
   - [Networking](#networking)
   - [State Management](#state-management)
-- [Dark and Light Theme Support](#dark-and-light-theme-support)
+
 - [Screenshots](#screenshots)
 
 ## Features
@@ -19,7 +19,7 @@ This project is a Kotlin Multiplatform application that uses the [Rick and Morty
 - Cross-platform UI with **Jetpack Compose**.
 - Integration with the **Rick and Morty GraphQL API** for live data.
 - Search and filter options for characters, locations, and episodes.
-- **Dark and light theme** compatibility.
+
 - Detailed screens for each entity (character, location, episode).
 
 ## Screens
@@ -56,44 +56,27 @@ This project is a Kotlin Multiplatform application that uses the [Rick and Morty
 ### Networking
 - **Apollo GraphQL**: For making API calls to the Rick and Morty GraphQL.
 
-### State Management
-- **StateFlow**: Utilized for reactive state management across all platforms.
+### Architecture
+- **MVVM**: Moko MVVM.
 
-## Dark and Light Theme Support
 
-This application supports both **dark** and **light** themes, dynamically adjusting the UI based on the user’s system settings or manual preference. Each screen is designed to be visually cohesive in both themes.
+
+
 
 ## Screenshots
 
-### Light Theme
 
-- #### Characters Page
-  ![Characters Page - Light](#)
 
-- #### Locations Page
-  ![Locations Page - Light](#)
+- #### Desktop
+  ![Characters Page - Light](https://github.com/mostafaemara/kmp-rick-and-morty/blob/main/desktop.png?raw=true)
 
-- #### Episodes Page
-  ![Episodes Page - Light](#)
+- #### Android
+  ![Locations Page - Light](https://github.com/mostafaemara/kmp-rick-and-morty/blob/main/android1.png?raw=true)   ![Locations Page - Light](https://github.com/mostafaemara/kmp-rick-and-morty/blob/main/android2.png?raw=true)
 
-- #### Character Details Page
-  ![Character Details - Light](#)
+- #### IOS
+  ![Locations Page - Light](https://github.com/mostafaemara/kmp-rick-and-morty/blob/main/ios1.png?raw=true)   ![Locations Page - Light](https://github.com/mostafaemara/kmp-rick-and-morty/blob/main/ios2.png?raw=true)
 
-### Dark Theme
 
-- #### Characters Page
-  ![Characters Page - Dark](#)
-
-- #### Locations Page
-  ![Locations Page - Dark](#)
-
-- #### Episodes Page
-  ![Episodes Page - Dark](#)
-
-- #### Character Details Page
-  ![Character Details - Dark](#)
-
----
 
 ## Getting Started
 
